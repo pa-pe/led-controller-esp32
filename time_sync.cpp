@@ -7,17 +7,35 @@ struct tm cachedTime = {0};  // Глобальное кэшированное в
 unsigned long lastMillis = 0;  // Время последнего обновления миллисекунд
 bool timeSyncStarted = false;  // Флаг запущенной синхронизации
 
+bool waitForSync(int retries = 3, int delayMs = 500) {
+    struct tm timeInfo;
+    for (int i = 0; i < retries; i++) {
+        if (getLocalTime(&timeInfo)) {
+            // logEvent("Time synced.");
+            cachedTime = timeInfo;
+            lastMillis = millis();
+            return true;
+        }
+        logEvent("Waiting for time sync...");
+        delay(delayMs);
+    }
+    // logEvent("Time sync failed after retries.");
+    return false;
+}
+
 void syncTimeTask(void *parameter) {
     while (true) {
         if (WiFi.status() == WL_CONNECTED) {
             if (!updateTimeZone()) updateTimeZone();
             // logEvent("Setting time config: gmtOffset_sec=" + String(gmtOffset_sec) + ", daylightOffset_sec=" + String(daylightOffset_sec));
             // configTime(gmtOffset_sec, daylightOffset_sec, String(config["NTP_SERVER"]).c_str());
+            logEvent("Starting time sync " + String(config["NTP_SERVER"]));
             configTime(gmtOffset_sec, 0, String(config["NTP_SERVER"]).c_str());
-            struct tm timeInfo;
-            if (getLocalTime(&timeInfo)) {
-                cachedTime = timeInfo; // Обновляем кэш
-                lastMillis = millis(); // Фиксируем момент синхронизации
+            if (waitForSync()) {
+            // struct tm timeInfo;
+            // if (getLocalTime(&timeInfo)) {
+                // cachedTime = timeInfo; // Обновляем кэш
+                // lastMillis = millis(); // Фиксируем момент синхронизации
                 // logEvent("Time synced: " + String(asctime(&cachedTime)));
                 logEvent("Time synced.");
             } else {
