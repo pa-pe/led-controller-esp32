@@ -14,6 +14,7 @@
 #define AP_PASS "12345678"
 
 #define OTA_ENABLED 1 // Over-the-air update
+#define NTP_ENABLED 0 // Network clock synchronization
 
 // log
 #define LOG_SIZE 15  // Храним 15 последних событий

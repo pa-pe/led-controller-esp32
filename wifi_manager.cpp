@@ -60,7 +60,7 @@ void onWiFiEvent(WiFiEvent_t event) {
 
             checkWiFiAndOTA();
 
-            // startTimeSync();
+            if (NTP_ENABLED) startTimeSync();
             break;
         
         case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
