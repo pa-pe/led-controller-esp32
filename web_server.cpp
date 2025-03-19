@@ -256,6 +256,14 @@ void startWebServer() {
         request->send(response);
     });
 
+    server.on("/bootstrap-grid.min.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // request->send(SPIFFS, "/bootstrap.min.css", "text/css");
+        // request->send(SPIFFS, "/bootstrap.min.css.gz", "text/css", false);
+        AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/bootstrap-grid.min.css.gz", "text/css");
+        response->addHeader("Content-Encoding", "gzip");
+        request->send(response);
+    });
+
     server.on("/bootstrap.bundle.min.js", HTTP_GET, [](AsyncWebServerRequest *request) {
         // request->send(SPIFFS, "/bootstrap.bundle.min.js", "application/javascript");
         // request->send(SPIFFS, "/bootstrap.bundle.min.js.gz", "application/javascript", false);
