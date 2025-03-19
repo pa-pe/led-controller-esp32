@@ -10,15 +10,22 @@ This project is a firmware for the ESP32-C3 board, providing control over a PIR 
 - **Wi-Fi configuration:**
   - AP mode for initial setup.
   - Connecting to selected SSID.
-- **Time synchronization** upon Wi-Fi connection.
+- **Time synchronization** upon Wi-Fi connection (in the process of debugging).
 - **mDNS support** (default led-controller.local).
 - **Error indication** using the built-in LED of the board.
 - **OTA updates** for firmware upgrades.
+- **Logging:**
+  - The last few log entries are available via the web interface.
+  - Logs are also output to UART/Serial.
+
+## Configuration
+- **Hardware settings** are located in `config.h`.
+- **Default values** are set in `config_manager.cpp`.
 
 ## Installation
 ### 1. Clone the repository:
 ```sh
-git clone https://github.com/your-username/led-controller-esp32.git
+git clone https://github.com/pa-pe/led-controller-esp32.git
 cd led-controller-esp32
 ```
 
