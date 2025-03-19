@@ -1,4 +1,5 @@
 #include "ota.h"
+#include "config_manager.h"
 #include "log_manager.h"
 
 void configureOTA() {
@@ -8,6 +9,7 @@ void configureOTA() {
 
   // Hostname defaults to esp3232-[MAC]
   // ArduinoOTA.setHostname("myesp32");
+  ArduinoOTA.setHostname(String(config["host_name"]).c_str());
 
   // No authentication by default
   // ArduinoOTA.setPassword("admin");
