@@ -11,7 +11,7 @@ bool waitForSync(int retries = 3, int delayMs = 500) {
     struct tm timeInfo;
     for (int i = 0; i < retries; i++) {
         if (getLocalTime(&timeInfo)) {
-            // logEvent("Time synced.");
+            logEvent("Time synced.");
             cachedTime = timeInfo;
             lastMillis = millis();
             return true;
@@ -19,7 +19,7 @@ bool waitForSync(int retries = 3, int delayMs = 500) {
         logEvent("Waiting for time sync...");
         delay(delayMs);
     }
-    // logEvent("Time sync failed after retries.");
+    logEvent("Time sync failed");
     return false;
 }
 
@@ -29,17 +29,20 @@ void syncTimeTask(void *parameter) {
             if (!updateTimeZone()) updateTimeZone();
             // logEvent("Setting time config: gmtOffset_sec=" + String(gmtOffset_sec) + ", daylightOffset_sec=" + String(daylightOffset_sec));
             // configTime(gmtOffset_sec, daylightOffset_sec, String(config["NTP_SERVER"]).c_str());
-            logEvent("Starting time sync " + String(config["NTP_SERVER"]));
-            configTime(gmtOffset_sec, 0, String(config["NTP_SERVER"]).c_str());
+            logEvent("Starting time sync " + String(config["NTP_SERVER1"]));
+            configTime(gmtOffset_sec, 0, String(config["NTP_SERVER1"]).c_str());
             if (waitForSync()) {
             // struct tm timeInfo;
             // if (getLocalTime(&timeInfo)) {
                 // cachedTime = timeInfo; // Обновляем кэш
                 // lastMillis = millis(); // Фиксируем момент синхронизации
                 // logEvent("Time synced: " + String(asctime(&cachedTime)));
-                logEvent("Time synced.");
+                // logEvent("Time synced.");
             } else {
-                logEvent("Time sync failed");
+                // logEvent("Time sync failed");
+                logEvent("Starting time sync " + String(config["NTP_SERVER2"]));
+                configTime(gmtOffset_sec, 0, String(config["NTP_SERVER2"]).c_str());
+                waitForSync();
             }
         } else {
           logEvent("Time sync skip (WiFi disconnected)");

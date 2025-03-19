@@ -13,7 +13,8 @@ void loadConfig() {
     config["led_delay"] = preferences.getInt("led_delay", 5); // default 5 sec
     config["WIFI_SSID"] = preferences.getString("WIFI_SSID", "WIFI_SSID").c_str(); // default: WIFI_SSID
     config["WIFI_PASS"] = preferences.getString("WIFI_PASS", "WIFI_PASS").c_str(); // default: WIFI_PASS
-    config["NTP_SERVER"] = preferences.getString("NTP_SERVER", "pool.ntp.org").c_str();
+    config["NTP_SERVER1"] = preferences.getString("NTP_SERVER1", "us.pool.ntp.org").c_str();
+    config["NTP_SERVER2"] = preferences.getString("NTP_SERVER2", "pool.ntp.org").c_str();
     preferences.end();
 }
 
@@ -25,7 +26,8 @@ void saveConfig() {
     preferences.putInt("led_delay", config["led_delay"].as<int>());
     preferences.putString("WIFI_SSID", String(config["WIFI_SSID"]).c_str());
     preferences.putString("WIFI_PASS", String(config["WIFI_PASS"]).c_str());
-    preferences.putString("NTP_SERVER", String(config["NTP_SERVER"]).c_str());
+    preferences.putString("NTP_SERVER1", String(config["NTP_SERVER1"]).c_str());
+    preferences.putString("NTP_SERVER2", String(config["NTP_SERVER2"]).c_str());
     preferences.end();
 }
 
