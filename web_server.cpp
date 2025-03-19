@@ -1,10 +1,10 @@
-// #include <Arduino.h>
 #include "config_manager.h"
 #include "web_server.h"
 #include "data.h"
 #include "log_manager.h"
 #include "led_controller.h"
 #include "SPIFFS.h"
+#include "version.h"
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -50,10 +50,6 @@ String getWebSocketScript() {
            "ws.onmessage = function(event) {"
            "   try {"
            "       let data = JSON.parse(event.data);"
-          //  "       for (let key in data) {"
-          //  "           let el = document.getElementById(key);"
-          //  "           if (el) el.innerText = data[key];"
-          //  "       }"
            "       for (let key in data) {"
            "           let el = document.getElementById(key);"
            "           if (el) {"
@@ -82,28 +78,6 @@ String getWebSocketScript() {
            "   setTimeout(() => location.reload(), 5000);"
            "};"
            "</script>";
-    // "<script>"
-    //         "let ws = new WebSocket('ws://' + window.location.host + '/ws');"
-    //         "ws.onmessage = function(event) {"
-    //         "   try {"
-    //         "       let data = JSON.parse(event.data);"
-    //         "       for (let key in data) {"
-    //         "           let el = document.getElementById(key);"
-    //         "           if (el) el.innerText = data[key];"
-    //         "       }"
-    //         "   } catch (e) {"
-    //         "       console.error('JSON parse error:', e.message);"
-    //         "       document.getElementById('ws_status').innerText = 'Invalid data received';"
-    //         "       document.getElementById('ws_status').style.color = 'orange';"
-    //         "   }"
-    //         "};"
-    //         "ws.onopen = () => ws.send('init');" // get data
-    //         "ws.onclose = function() {"
-    //         "   document.getElementById('ws_status').innerText = 'WebSocket offline';"
-    //         "   document.getElementById('ws_status').style.color = 'red';"
-    //         "   setTimeout(() => location.reload(), 5000);"
-    //         "};"
-    //         "</script>";
 }
 
 String sendDataScript() {
@@ -177,6 +151,7 @@ void handleRoot(AsyncWebServerRequest *request) {
     "</head>\n<body>\n"
     "<div class='container'>\n"
     "<div style='float: right; font-size: 77%; text-align: right;'>"
+    "v" + FIRMWARE_VERSION + " b" + BUILD_NUMBER + "<br/>"
     "Uptime: <span id='uptime'></span><br/>"
     "<span id='datetime'></span> <span id='timezone'></span><br/>"
     "</div>\n"
