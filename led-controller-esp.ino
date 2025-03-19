@@ -19,7 +19,7 @@ void setup() {
     startWebServer();
     initLED();
     initPIR();
-    configureOTA();
+    if (OTA_ENABLED) configureOTA();
 }
 
 // void loop() {
@@ -40,7 +40,7 @@ void loop() {
     measureExecutionTime(handlePIR, "handlePIR");
     measureExecutionTime(handleLED, "handleLED");
     measureExecutionTime(handleWebServerUpdates, "handleWebServerUpdates");
-    measureExecutionTime(handleOTA, "handleOTA");
+    if (OTA_ENABLED) measureExecutionTime(handleOTA, "handleOTA");
 
     int delta = start - millis();
     if (delta < loop_delay){
