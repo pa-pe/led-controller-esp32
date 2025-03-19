@@ -183,14 +183,26 @@ void handleRoot(AsyncWebServerRequest *request) {
     " </div>\n" // row
 
     " <div class='row'>\n"
+
     "<h2>Config</h2>\n"
     "  <div class='col'>\n"
     "<h2>Wi-Fi</h2>\n"
     "SSID: <span id='WIFI_SSID'>Loading...</span> <button class='btn btn-light editable' data='WIFI_SSID'>✎</button><br>\n"
     "PASS: <span id='WIFI_PASS'>Loading...</span> <button class='btn btn-light editable' data='WIFI_PASS'>✎</button><br>\n"
     "<br>\n"
-    "<button class='btn btn-light senddata' data='reboot' value='1'>reboot</button><br>\n"
     "  </div>\n" // col
+
+    "  <div class='col'>\n"
+    "<h2>Network</h2>\n"
+    "Hostname: <span id='host_name'>Loading...</span> <button class='btn btn-light editable' data='host_name'>✎</button><br>\n"
+    "mDNS: <span id='mDNS'>Loading...</span><br>\n"
+    "<br>\n"
+    "NTP_SERVER1: <span id='NTP_SERVER1'>Loading...</span> <button class='btn btn-light editable' data='NTP_SERVER1'>✎</button><br>\n"
+    "NTP_SERVER2: <span id='NTP_SERVER2'>Loading...</span> <button class='btn btn-light editable' data='NTP_SERVER2'>✎</button><br>\n"
+    "  </div>\n" // col
+
+    "<button class='btn btn-light senddata' data='reboot' value='1'>reboot</button><br>\n"
+
     " </div>\n" // row
 
     "</div>\n" // container
@@ -227,6 +239,11 @@ void initSPIFFS() {
 
 // Инициализация веб-сервера и WebSocket
 void startWebServer() {
+    runtimeData.values["host_name"] = String(config["host_name"]);
+    runtimeData.values["mDNS"] = String(config["host_name"]) + ".local";
+    runtimeData.values["NTP_SERVER1"] = String(config["NTP_SERVER1"]);
+    runtimeData.values["NTP_SERVER2"] = String(config["NTP_SERVER2"]);
+
     initSPIFFS();
 
     server.on("/", HTTP_GET, handleRoot);
@@ -255,10 +272,13 @@ void startWebServer() {
             if (param == "led_delay") {
                 // config[param] = value.toInt();
                 setConfigValueInt(param.c_str(), value.toInt());
-            } else if (param == "led_mode" || param == "WIFI_SSID" || param == "WIFI_PASS") {
+            } else if (param == "led_mode" || param == "WIFI_SSID" || param == "WIFI_PASS" || param == "NTP_SERVER1" || param == "NTP_SERVER2") {
                 setConfigValue(param.c_str(), value.c_str());
             } else if (param == "currentBrightness") {
                 setLEDBrightness(value.toInt());    
+            } else if (param == "host_name") {
+                setConfigValue(param.c_str(), value.c_str());
+                runtimeData.values["mDNS"] = String(config["host_name"]) + ".local";
             } else if (param == "reboot") {                	
                 ESP.restart();
             } else {
