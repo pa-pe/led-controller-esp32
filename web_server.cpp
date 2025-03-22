@@ -3,9 +3,10 @@
 #include "data.h"
 #include "log_manager.h"
 #include "led_controller.h"
-#include "spiffs.h"
+#include "filesystem.h"
 #include "SPIFFS.h"
 #include "version.h"
+#include "web_file_manager.h"
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -145,7 +146,8 @@ String sendDataScript() {
 
 void handleRoot(AsyncWebServerRequest *request) {
     request->send(200, "text/html", 
-"<!DOCTYPE html>\n<html><head><meta charset='UTF-8'>"
+"<!DOCTYPE html>\n<html>\n<head>\n<meta charset='UTF-8'>\n"
+"<title>" + String(config["host_name"]) + "</title>\n"
 // "<link rel='stylesheet' href='/bootstrap.min.css'>";
 + getWebSocketScript() +
 " <meta name='viewport' content='width=device-width, initial-scale=1'>"
@@ -230,41 +232,66 @@ void handleWebSocketMessage(AsyncWebSocketClient *client, void *arg, uint8_t *da
     }
 }
 
+// Регистрация статических файлов
+void registerStaticFiles() {
+    struct FileMapping {
+        const char *url;
+        const char *path;
+        const char *contentType;
+    };
+
+    FileMapping files[] = {
+        {"/bootstrap-grid.min.css", "/bootstrap-grid.min.css.gz", "text/css"},
+        {"/bootstrap.min.css", "/bootstrap.min.css.gz", "text/css"},
+        // {"/style.css", "/style.css.gz", "text/css"}
+        {"/bootstrap.bundle.min.js", "/bootstrap.bundle.min.js.gz", "application/javascript"},
+    };
+
+    for (auto &file : files) {
+        server.on(file.url, HTTP_GET, [file](AsyncWebServerRequest *request) {
+            if (fileExists(file.path)) {
+                AsyncWebServerResponse *response = request->beginResponse(SPIFFS, file.path, file.contentType);
+                response->addHeader("Content-Encoding", "gzip");
+                request->send(response);
+            } else {
+                request->send(200, file.contentType, "/* File is loading... */");
+            }
+        });
+    }
+}
+
 
 // Инициализация веб-сервера и WebSocket
 void startWebServer() {
-    runtimeData.values["host_name"] = String(config["host_name"]);
-    runtimeData.values["mDNS"] = String(config["host_name"]) + ".local";
-    runtimeData.values["NTP_SERVER1"] = String(config["NTP_SERVER1"]);
-    runtimeData.values["NTP_SERVER2"] = String(config["NTP_SERVER2"]);
+    // initFileSystem();
 
-    setupSPIFFS();
-    
     server.on("/", HTTP_GET, handleRoot);
-    
-    server.on("/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest *request) {
-        // request->send(SPIFFS, "/bootstrap.min.css", "text/css");
-        // request->send(SPIFFS, "/bootstrap.min.css.gz", "text/css", false);
-        AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/bootstrap.min.css.gz", "text/css");
-        response->addHeader("Content-Encoding", "gzip");
-        request->send(response);
-    });
 
-    server.on("/bootstrap-grid.min.css", HTTP_GET, [](AsyncWebServerRequest *request) {
-        // request->send(SPIFFS, "/bootstrap.min.css", "text/css");
-        // request->send(SPIFFS, "/bootstrap.min.css.gz", "text/css", false);
-        AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/bootstrap-grid.min.css.gz", "text/css");
-        response->addHeader("Content-Encoding", "gzip");
-        request->send(response);
-    });
+    registerStaticFiles();
 
-    server.on("/bootstrap.bundle.min.js", HTTP_GET, [](AsyncWebServerRequest *request) {
-        // request->send(SPIFFS, "/bootstrap.bundle.min.js", "application/javascript");
-        // request->send(SPIFFS, "/bootstrap.bundle.min.js.gz", "application/javascript", false);
-        AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/bootstrap.bundle.min.js.gz", "application/javascript");
-        response->addHeader("Content-Encoding", "gzip");
-        request->send(response);
-    });
+    // server.on("/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     // request->send(SPIFFS, "/bootstrap.min.css", "text/css");
+    //     // request->send(SPIFFS, "/bootstrap.min.css.gz", "text/css", false);
+    //     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/bootstrap.min.css.gz", "text/css");
+    //     response->addHeader("Content-Encoding", "gzip");
+    //     request->send(response);
+    // });
+
+    // server.on("/bootstrap-grid.min.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     // request->send(SPIFFS, "/bootstrap.min.css", "text/css");
+    //     // request->send(SPIFFS, "/bootstrap.min.css.gz", "text/css", false);
+    //     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/bootstrap-grid.min.css.gz", "text/css");
+    //     response->addHeader("Content-Encoding", "gzip");
+    //     request->send(response);
+    // });
+
+    // server.on("/bootstrap.bundle.min.js", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     // request->send(SPIFFS, "/bootstrap.bundle.min.js", "application/javascript");
+    //     // request->send(SPIFFS, "/bootstrap.bundle.min.js.gz", "application/javascript", false);
+    //     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/bootstrap.bundle.min.js.gz", "application/javascript");
+    //     response->addHeader("Content-Encoding", "gzip");
+    //     request->send(response);
+    // });
 
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest *request) {
         if (request->hasParam("param") && request->hasParam("value")) {
@@ -309,6 +336,9 @@ void startWebServer() {
         }
         onWebSocketEvent(server, client, type, arg, data, len);
     });
+
+
+    setupFileManager(server, String(config["host_name"]));
 
     server.addHandler(&ws);
     server.begin();
