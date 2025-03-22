@@ -3,6 +3,7 @@
 #include "data.h"
 #include "log_manager.h"
 #include "led_controller.h"
+#include "spiffs.h"
 #include "SPIFFS.h"
 #include "version.h"
 
@@ -230,13 +231,6 @@ void handleWebSocketMessage(AsyncWebSocketClient *client, void *arg, uint8_t *da
 }
 
 
-void initSPIFFS() {
-    if (!SPIFFS.begin(true)) {
-        logEvent("SPIFFS Mount Failed");
-        return;
-    }
-}
-
 // Инициализация веб-сервера и WebSocket
 void startWebServer() {
     runtimeData.values["host_name"] = String(config["host_name"]);
@@ -244,8 +238,8 @@ void startWebServer() {
     runtimeData.values["NTP_SERVER1"] = String(config["NTP_SERVER1"]);
     runtimeData.values["NTP_SERVER2"] = String(config["NTP_SERVER2"]);
 
-    initSPIFFS();
-
+    setupSPIFFS();
+    
     server.on("/", HTTP_GET, handleRoot);
     
     server.on("/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest *request) {
