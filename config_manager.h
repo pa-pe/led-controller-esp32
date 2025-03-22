@@ -1,5 +1,4 @@
-#ifndef CONFIG_MANAGER_H
-#define CONFIG_MANAGER_H
+#pragma once
 
 #include <ArduinoJson.h>
 #include <Preferences.h>
@@ -12,5 +11,3 @@ void saveConfig();
 const char* getConfigValue(const char* key);
 void setConfigValue(const char* key, const char* value);
 void setConfigValueInt(const char* key, int value);
-
-#endif // CONFIG_MANAGER_H

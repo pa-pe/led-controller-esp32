@@ -23,7 +23,10 @@ void onWiFiEvent(WiFiEvent_t event);
 void setupWiFi() {
     runtimeData.values["WIFI_SSID"] = String(config["WIFI_SSID"]);
     // runtimeData.values["WIFI_PASS"] = String(config["WIFI_PASS"]);
-    runtimeData.values["WIFI_PASS"] = "***";
+    runtimeData.values["WIFI_PASS"] = "***"; // hide password from web interface
+
+    runtimeData.values["AP_SSID"] = String(config["AP_SSID"]);
+    runtimeData.values["AP_PASS"] = String(config["AP_PASS"]);
 
     runtimeData.values["host_name"] = String(config["host_name"]);
     runtimeData.values["mDNS"] = String(config["host_name"]) + ".local";
@@ -73,8 +76,8 @@ void onWiFiEvent(WiFiEvent_t event) {
             logEvent("Wi-Fi disconnected, switching to AP mode");
             setIndicatorState(IndicatorState::AP_MODE);
             WiFi.mode(WIFI_AP);
-            if (WiFi.softAP(AP_SSID, AP_PASS)) {
-                logEvent("AP mode active: " + String(AP_SSID) + ", IP: " + WiFi.softAPIP().toString());
+            if (WiFi.softAP(String(config["AP_SSID"]), String(config["AP_PASS"]))) {
+                logEvent("AP mode active: " + String(config["AP_SSID"]) + ", IP: " + WiFi.softAPIP().toString());
                 checkWiFiAndOTA();
                 wifiScanner.attach(30, scanNetworks);  // Запускаем фоновое сканирование
             } else {

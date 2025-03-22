@@ -1,3 +1,4 @@
+#include "config.h"
 #include "config_manager.h"
 #include <ArduinoJson.h>
 #include <Preferences.h>
@@ -7,13 +8,15 @@ Preferences preferences;
 
 void loadConfig() {
     preferences.begin("config", true); // read only
-    config["wifi_ssid"] = preferences.getString("wifi_ssid", "your-ssid").c_str();
-    config["wifi_password"] = preferences.getString("wifi_password", "your-password").c_str();
-    config["host_name"] = preferences.getString("host_name", "led-controller").c_str();
+    // config["wifi_ssid"] = preferences.getString("wifi_ssid", "your-ssid").c_str();
+    // config["wifi_password"] = preferences.getString("wifi_password", "your-password").c_str();
+    config["host_name"] = preferences.getString("host_name", DEFAULT_NAME).c_str();
+    config["AP_SSID"] = preferences.getString("AP_SSID", DEFAULT_NAME).c_str();
+    config["AP_PASS"] = preferences.getString("AP_SSID", DEFAULT_AP_PASS).c_str();
     config["led_mode"] = preferences.getString("led_mode", "pir").c_str(); // default: pir
     config["led_delay"] = preferences.getInt("led_delay", 5); // default 5 sec
-    config["WIFI_SSID"] = preferences.getString("WIFI_SSID", "WIFI_SSID").c_str(); // default: WIFI_SSID
-    config["WIFI_PASS"] = preferences.getString("WIFI_PASS", "WIFI_PASS").c_str(); // default: WIFI_PASS
+    config["WIFI_SSID"] = preferences.getString("WIFI_SSID", "REPLACE_WIFI_SSID").c_str(); // default: WIFI_SSID
+    config["WIFI_PASS"] = preferences.getString("WIFI_PASS", "REPLACE_WIFI_PASS").c_str(); // default: WIFI_PASS
     config["NTP_SERVER1"] = preferences.getString("NTP_SERVER1", "us.pool.ntp.org").c_str();
     config["NTP_SERVER2"] = preferences.getString("NTP_SERVER2", "pool.ntp.org").c_str();
     preferences.end();
@@ -21,9 +24,11 @@ void loadConfig() {
 
 void saveConfig() {
     preferences.begin("config", false); // Open for write
-    preferences.putString("wifi_ssid", String(config["wifi_ssid"]).c_str());
-    preferences.putString("wifi_password", String(config["wifi_password"]).c_str());
+    // preferences.putString("wifi_ssid", String(config["wifi_ssid"]).c_str());
+    // preferences.putString("wifi_password", String(config["wifi_password"]).c_str());
     preferences.putString("host_name", String(config["host_name"]).c_str());
+    preferences.putString("AP_SSID", String(config["AP_SSID"]).c_str());
+    preferences.putString("AP_PASS", String(config["AP_PASS"]).c_str());
     preferences.putString("led_mode", String(config["led_mode"]).c_str());
     preferences.putInt("led_delay", config["led_delay"].as<int>());
     preferences.putString("WIFI_SSID", String(config["WIFI_SSID"]).c_str());
