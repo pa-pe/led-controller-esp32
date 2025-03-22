@@ -32,7 +32,6 @@ void downloadTask(void *param) {
     FileMapping file;
 
     while (xQueueReceive(downloadQueue, &file, portMAX_DELAY) == pdPASS) {
-        // Проверяем подключение перед загрузкой
         if (WiFi.status() != WL_CONNECTED) {
             logEvent("Skipping download, no internet.");
             continue;
@@ -46,7 +45,8 @@ void downloadTask(void *param) {
         if (httpResponseCode == 200) {
             File f = SPIFFS.open(file.path, "w");
             if (f) {
-                f.write(http.getStream());
+                // f.write(http.getStream());
+                http.writeToStream(&f);
                 f.close();
                 logEvent("Downloaded: " + String(file.path));
             } else {
