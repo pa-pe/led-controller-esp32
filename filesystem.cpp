@@ -4,6 +4,7 @@
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <freertos/queue.h>
+#include "esp_task_wdt.h"
 
 // Структура для сопоставления файлов
 struct FileMapping {
@@ -105,4 +106,31 @@ void initFileSystem() {
     // Запускаем загрузку
     // startDownloadTask();
     // запуск загрузки перенесен в wifi_manager.cpp на onWiFiEvent ARDUINO_EVENT_WIFI_STA_GOT_IP
+}
+
+bool formatSPIFFS() {
+  logEvent("Formatting SPIFFS...");
+        
+  // Отписываем текущую задачу от WDT
+  esp_task_wdt_delete(NULL);
+
+  // Отключаем Watchdog Timer перед форматированием
+  esp_task_wdt_deinit();
+
+  bool success = SPIFFS.format();
+
+  // Включаем Watchdog обратно
+  esp_task_wdt_init(nullptr);
+
+  // Повторно подписываем задачу на WDT
+  esp_task_wdt_add(NULL);
+
+  if (success) {
+      logEvent("SPIFFS formatted successfully");
+      // ESP.restart();
+  } else {
+      logEvent("SPIFFS format failed");
+  }
+
+  return success;
 }

@@ -5,3 +5,4 @@
 void initFileSystem();
 bool fileExists(const char* path);
 void startDownloadTask();
+bool formatSPIFFS();
