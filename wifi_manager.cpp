@@ -25,6 +25,12 @@ void setupWiFi() {
     // runtimeData.values["WIFI_PASS"] = String(config["WIFI_PASS"]);
     runtimeData.values["WIFI_PASS"] = "***";
 
+    runtimeData.values["host_name"] = String(config["host_name"]);
+    runtimeData.values["mDNS"] = String(config["host_name"]) + ".local";
+    runtimeData.values["NTP_SERVER1"] = String(config["NTP_SERVER1"]);
+    runtimeData.values["NTP_SERVER2"] = String(config["NTP_SERVER2"]);
+
+
     logEvent("Wi-Fi: trying to connect to " + String(config["WIFI_SSID"]));
     WiFi.mode(WIFI_STA);
     WiFi.onEvent(onWiFiEvent);  // Регистрируем обработчик событий Wi-Fi
@@ -38,7 +44,7 @@ void setupWiFi() {
 void scanNetworks() {
     if (WiFi.getMode() == WIFI_AP && !scanning) {
         scanning = true;
-        logEvent("Scanning for known Wi-Fi networks...");
+        logEvent("Wi-Fi: Scanning for SSID=" + String(config["WIFI_SSID"]));
         WiFi.scanNetworks(true);  // Асинхронное сканирование
     }
 }
