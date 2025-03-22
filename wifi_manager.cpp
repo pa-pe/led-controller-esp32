@@ -10,8 +10,7 @@
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <Ticker.h>
-// #include <NetworkClient.h>
-// #include <WiFiAP.h>
+#include "filesystem.h"
 
 Ticker wifiScanner;
 bool scanning = false;
@@ -70,6 +69,7 @@ void onWiFiEvent(WiFiEvent_t event) {
             checkWiFiAndOTA();
 
             if (NTP_ENABLED) startTimeSync();
+            startDownloadTask();
             break;
         
         case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
