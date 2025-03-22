@@ -14,7 +14,8 @@ struct FileMapping {
 
 // Список файлов для скачивания
 FileMapping files[] = {
-    {"/bootstrap-grid.min.css.gz", "https://raw.githubusercontent.com/pa-pe/led-controller-esp32/refs/heads/main/data/bootstrap-grid.min.css.gz"},
+    // {"/bootstrap-grid.min.css.gz", "https://raw.githubusercontent.com/pa-pe/led-controller-esp32/refs/heads/main/data/bootstrap-grid.min.css.gz"},
+    {"/bs533-rbt-grd.min.css.gz", "https://raw.githubusercontent.com/pa-pe/led-controller-esp32/refs/heads/main/data/bs533-rbt-grd.min.css.gz"},
     // {"/bootstrap.min.css.gz", "https://raw.githubusercontent.com/twbs/bootstrap/main/dist/css/bootstrap.min.css"},
     // {"/style.css.gz", "https://example.com/style.css"}
 };
