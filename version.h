@@ -1,2 +1,2 @@
-#define FIRMWARE_VERSION "1.1.1"
-#define BUILD_NUMBER 106
+#define FIRMWARE_VERSION "1.1.2"
+#define BUILD_NUMBER 116
