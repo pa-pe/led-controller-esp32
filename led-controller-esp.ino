@@ -1,6 +1,7 @@
 #include "config.h"
 #include "config_manager.h"
 #include "indicator.h"
+#include "filesystem.h"
 #include "wifi_manager.h"
 #include "ota.h"
 #include "time_manager.h"
@@ -15,6 +16,7 @@ void setup() {
     loadConfig();
     
     initIndicator();
+    initFileSystem(); // important before WiFi and WebServer
     setupWiFi();
     startWebServer();
     initLED();
