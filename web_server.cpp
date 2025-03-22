@@ -156,28 +156,33 @@ void handleRoot(AsyncWebServerRequest *request) {
 "<!DOCTYPE html>\n<html>\n<head>\n<meta charset='UTF-8'>\n"
 "<title>" + String(config["host_name"]) + "</title>\n"
 // "<link rel='stylesheet' href='/bootstrap.min.css'>"
-"<link rel='stylesheet' href='/bootstrap-grid.min.css'>"
+// "<link rel='stylesheet' href='/bootstrap-grid.min.css'>"
+"<link rel='stylesheet' href='/bs533-rbt-grd.min.css'>"
 + getWebSocketScript() +
-" <meta name='viewport' content='width=device-width, initial-scale=1'>"
-    "<style>body { font-family: Arial, sans-serif; }</style>"
+" <meta name='viewport' content='width=device-width, initial-scale=1'>\n"
+    "<style>\n"
+    "body { font-family: Arial, sans-serif; }\n"
+    "pre { max-width: 100%;  overflow: scroll; }\n"
+    // ".container { box-sizing: border-box; }\n"
+    "</style>\n"
     "</head>\n<body>\n"
     "<div class='container'>\n"
     "<div style='float: right; font-size: 77%; text-align: right;'>"
     "v" + FIRMWARE_VERSION + " b" + BUILD_NUMBER + "<br/>"
-    "Uptime: <span id='uptime'></span><br/>"
+    "Up: <span id='uptime' title='Uptime'></span><br/>"
     "<span id='datetime'></span> <span id='timezone'></span><br/>"
     "</div>\n"
     "<span id='ws_status'></span>\n"
     "<h1>LED Controller</h1>\n"
 
     " <div class='row'>\n"
-    "  <div class='col'>\n"
+    "  <div class='col-12 col-md-6'>\n"
     "<h2>PIR Sensors</h2>\n"
     "<p>PIR Sensor 1: <span id='pir1'>Loading...</span></p>\n"
     "<p>PIR Sensor 2: <span id='pir2'>Loading...</span></p>\n"
     "  </div>\n" // col
 
-    "  <div class='col'>\n"
+    "  <div class='col-12 col-md-6'>\n"
     "<h2>LED</h2>\n"
     "<label><input type='radio' name='led_mode' data='led_mode' id='led_mode' class='editable' value='manual'> Manual</label>\n"
     "<label><input type='radio' name='led_mode' data='led_mode' id='led_mode' class='editable' value='pir'> PIR Sensor</label>\n"
@@ -190,20 +195,23 @@ void handleRoot(AsyncWebServerRequest *request) {
     " </div>\n" // row
 
     " <div class='row'>\n"
-    "<h2>Logs</h2><pre id='log'>Loading...</pre>\n"
+    "  <div class='col'>\n"
+    "<h2>Logs</h2>\n"
+    "<pre id='log'>Loading...</pre>\n"
+    "  </div>\n" // col
     " </div>\n" // row
 
-    " <div class='row'>\n"
+    " <div class='row mt-3'>\n"
 
     "<h2>Config</h2>\n"
-    "  <div class='col'>\n"
+    "  <div class='col-12 col-md-4'>\n"
     "<h2>Wi-Fi</h2>\n"
     "SSID: <span id='WIFI_SSID'>Loading...</span> <button class='btn btn-light editable' data='WIFI_SSID'>✎</button><br>\n"
     "PASS: <span id='WIFI_PASS'>Loading...</span> <button class='btn btn-light editable' data='WIFI_PASS'>✎</button><br>\n"
     "<br>\n"
     "  </div>\n" // col
 
-    "  <div class='col'>\n"
+    "  <div class='col-12 col-md-4'>\n"
     "<h2>Network</h2>\n"
     "Hostname: <span id='host_name'>Loading...</span> <button class='btn btn-light editable' data='host_name'>✎</button><br>\n"
     "mDNS: <span id='mDNS'>Loading...</span><br>\n"
@@ -211,9 +219,10 @@ void handleRoot(AsyncWebServerRequest *request) {
     "NTP_SERVER1: <span id='NTP_SERVER1'>Loading...</span> <button class='btn btn-light editable' data='NTP_SERVER1'>✎</button><br>\n"
     "NTP_SERVER2: <span id='NTP_SERVER2'>Loading...</span> <button class='btn btn-light editable' data='NTP_SERVER2'>✎</button><br>\n"
     "  </div>\n" // col
-    "<br>\n"
-    "<br>\n"
+    "  <div class='col-12 col-md-4'>\n"
+    "<h2>System</h2>\n"
     "<button class='btn btn-light senddata' data='reboot' value='1' confirm_text='Reboot?'>reboot</button><br>\n"
+    "  </div>\n" // col
 
     " </div>\n" // row
 
@@ -250,6 +259,7 @@ void registerStaticFiles() {
     };
 
     FileMapping files[] = {
+        {"/bs533-rbt-grd.min.css", "/bs533-rbt-grd.min.css.gz", "text/css"},
         {"/bootstrap-grid.min.css", "/bootstrap-grid.min.css.gz", "text/css"},
         {"/bootstrap.min.css", "/bootstrap.min.css.gz", "text/css"},
         // {"/style.css", "/style.css.gz", "text/css"}
