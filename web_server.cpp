@@ -136,7 +136,14 @@ String sendDataScript() {
 "            alert('Error! SendData element must have a value attribute.');"
 "            return;"
 "        }"
-
+""
+"        let confirm_text = this.getAttribute('confirm_text');"
+"        if (confirm_text) {"
+"           if (!confirm(confirm_text)) {"
+"             return;"
+"           }"
+"        }"
+""
 "        fetch('/set?param=' + key + '&value=' + encodeURIComponent(value))"
 "            .then(response => response.text())"
 "            .catch(error => console.error('Error:', error));"
@@ -148,7 +155,8 @@ void handleRoot(AsyncWebServerRequest *request) {
     request->send(200, "text/html", 
 "<!DOCTYPE html>\n<html>\n<head>\n<meta charset='UTF-8'>\n"
 "<title>" + String(config["host_name"]) + "</title>\n"
-// "<link rel='stylesheet' href='/bootstrap.min.css'>";
+// "<link rel='stylesheet' href='/bootstrap.min.css'>"
+"<link rel='stylesheet' href='/bootstrap-grid.min.css'>"
 + getWebSocketScript() +
 " <meta name='viewport' content='width=device-width, initial-scale=1'>"
     "<style>body { font-family: Arial, sans-serif; }</style>"
@@ -203,8 +211,9 @@ void handleRoot(AsyncWebServerRequest *request) {
     "NTP_SERVER1: <span id='NTP_SERVER1'>Loading...</span> <button class='btn btn-light editable' data='NTP_SERVER1'>✎</button><br>\n"
     "NTP_SERVER2: <span id='NTP_SERVER2'>Loading...</span> <button class='btn btn-light editable' data='NTP_SERVER2'>✎</button><br>\n"
     "  </div>\n" // col
-
-    "<button class='btn btn-light senddata' data='reboot' value='1'>reboot</button><br>\n"
+    "<br>\n"
+    "<br>\n"
+    "<button class='btn btn-light senddata' data='reboot' value='1' confirm_text='Reboot?'>reboot</button><br>\n"
 
     " </div>\n" // row
 
