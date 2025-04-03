@@ -8,12 +8,11 @@
 int currentBrightness = 0;
 int targetBrightness = 0;
 unsigned int onTo = 0;
-int ledStartsFrom = 25;
 
 void initLED() {
     pinMode(LED_PIN, OUTPUT);
     digitalWrite(LED_PIN, !LED_ON_STATE);
-    runtimeData.values["led_min"] = String(config["led_min"]);
+    runtimeData.values["led_start_from"] = String(config["led_start_from"]);
     runtimeData.values["led_max"] = String(config["led_max"]);
     runtimeData.values["led_delay"] = String(config["led_delay"]);
     runtimeData.values["led_mode"] = String(config["led_mode"]);
@@ -49,7 +48,8 @@ void handleLED() {
     if (currentBrightness != targetBrightness) {
         currentBrightness += (targetBrightness > currentBrightness) ? 5 : -5;
         runtimeData.values["currentBrightness"] = String(currentBrightness);
-        int setAnalogValue = map(currentBrightness, 0, 100, ledStartsFrom, 255); // percent to byte
+        int ledStartFrom = map(config["led_start_from"], 0, 100, 0, 255);
+        int setAnalogValue = map(currentBrightness, 0, 100, ledStartFrom, 255); // percent to byte
         if (LED_ON_STATE == 0){
             setAnalogValue = map(currentBrightness, 0, 255, 255, 0); // invert
         }

@@ -187,10 +187,10 @@ void handleRoot(AsyncWebServerRequest *request) {
     "<label><input type='radio' name='led_mode' data='led_mode' id='led_mode' class='editable' value='manual'> Manual</label>\n"
     "<label><input type='radio' name='led_mode' data='led_mode' id='led_mode' class='editable' value='pir'> PIR Sensor</label>\n"
     "<br>\n"
-    "<label for='currentBrightness'>CurrentBrightness:</label>\n"
-    "<input type='range' id='currentBrightness' name='currentBrightness' data='currentBrightness' class='editable' min='0' max='100' step='5'><br>\n"
+    "<label for='currentBrightness'>CurrentBrightness: <span id='currentBrightness'>Loading...</span> %</label><br>\n"
+    "<input type='range' id='currentBrightness' name='currentBrightness' data='currentBrightness' class='editable' min='0' max='100' step='5' style='width: 100%;'><br>\n"
     // "<p>CurrentBrightness: <span id='currentBrightness'>Loading...</span></p>\n"
-    // "<span title='Min value from LED starts to glow'>Min: <span id='led_start_from'>Loading...</span> % <button class='btn btn-light editable' data='led_start_from'>✎</button></span><br>\n"
+    "<span title='Min value from LED starts to glow'>Start from: <span id='led_start_from'>Loading...</span> % <button class='btn btn-light editable' data='led_start_from'>✎</button></span><br>\n"
     "<span title='Max value in PIR mode'>Max: <span id='led_max'>Loading...</span> % <button class='btn btn-light editable' data='led_max'>✎</button></span><br>\n"
     "<span>Delay: <span id='led_delay'>Loading...</span> s <button class='btn btn-light editable' data='led_delay'>✎</button></span><br>\n"
     "  </div>\n" // col
