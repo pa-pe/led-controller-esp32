@@ -54,6 +54,7 @@ void scanNetworks() {
 void onWiFiEvent(WiFiEvent_t event) {
     switch (event) {
         case ARDUINO_EVENT_WIFI_STA_GOT_IP:
+            runtimeData.values["ip"] = WiFi.localIP().toString();
             logEvent("Connected to Wi-Fi: " + WiFi.localIP().toString());
             setIndicatorState(IndicatorState::NONE);
             wifiScanner.detach();  // Останавливаем сканирование

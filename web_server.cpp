@@ -209,6 +209,7 @@ void handleRoot(AsyncWebServerRequest *request) {
     "SSID: <span id='WIFI_SSID'>Loading...</span> <button class='btn btn-light editable' data='WIFI_SSID'>✎</button><br>\n"
     "PASS: <span id='WIFI_PASS'>Loading...</span> <button class='btn btn-light editable' data='WIFI_PASS'>✎</button><br>\n"
     "<br>\n"
+    "<p>ip: <span id='ip'>Loading...</span></p>\n"
     "  </div>\n" // col
 
     "  <div class='col-12 col-md-4'>\n"
