@@ -14,6 +14,8 @@ void loadConfig() {
     config["AP_SSID"] = preferences.getString("AP_SSID", DEFAULT_NAME).c_str();
     config["AP_PASS"] = preferences.getString("AP_SSID", DEFAULT_AP_PASS).c_str();
     config["led_mode"] = preferences.getString("led_mode", "pir").c_str(); // default: pir
+    config["led_start_from"] = preferences.getInt("led_start_from", 0);
+    config["led_max"] = preferences.getInt("led_max", 100);
     config["led_delay"] = preferences.getInt("led_delay", 5); // default 5 sec
     config["WIFI_SSID"] = preferences.getString("WIFI_SSID", "REPLACE_WIFI_SSID").c_str(); // default: WIFI_SSID
     config["WIFI_PASS"] = preferences.getString("WIFI_PASS", "REPLACE_WIFI_PASS").c_str(); // default: WIFI_PASS
@@ -30,6 +32,8 @@ void saveConfig() {
     preferences.putString("AP_SSID", String(config["AP_SSID"]).c_str());
     preferences.putString("AP_PASS", String(config["AP_PASS"]).c_str());
     preferences.putString("led_mode", String(config["led_mode"]).c_str());
+    preferences.putInt("led_start_from", config["led_start_from"].as<int>());
+    preferences.putInt("led_max", config["led_max"].as<int>());
     preferences.putInt("led_delay", config["led_delay"].as<int>());
     preferences.putString("WIFI_SSID", String(config["WIFI_SSID"]).c_str());
     preferences.putString("WIFI_PASS", String(config["WIFI_PASS"]).c_str());

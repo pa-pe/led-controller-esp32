@@ -188,9 +188,11 @@ void handleRoot(AsyncWebServerRequest *request) {
     "<label><input type='radio' name='led_mode' data='led_mode' id='led_mode' class='editable' value='pir'> PIR Sensor</label>\n"
     "<br>\n"
     "<label for='currentBrightness'>CurrentBrightness:</label>\n"
-    "<input type='range' id='currentBrightness' name='currentBrightness' data='currentBrightness' class='editable' min='0' max='100' step='5'>\n"
+    "<input type='range' id='currentBrightness' name='currentBrightness' data='currentBrightness' class='editable' min='0' max='100' step='5'><br>\n"
     // "<p>CurrentBrightness: <span id='currentBrightness'>Loading...</span></p>\n"
-    "<p>Delay: <span id='led_delay'>Loading...</span> s <button class='btn btn-light editable' data='led_delay'>✎</button></p>\n"
+    // "<span title='Min value from LED starts to glow'>Min: <span id='led_start_from'>Loading...</span> % <button class='btn btn-light editable' data='led_start_from'>✎</button></span><br>\n"
+    "<span title='Max value in PIR mode'>Max: <span id='led_max'>Loading...</span> % <button class='btn btn-light editable' data='led_max'>✎</button></span><br>\n"
+    "<span>Delay: <span id='led_delay'>Loading...</span> s <button class='btn btn-light editable' data='led_delay'>✎</button></span><br>\n"
     "  </div>\n" // col
     " </div>\n" // row
 
@@ -318,9 +320,16 @@ void startWebServer() {
             String param = request->getParam("param")->value();
             String value = request->getParam("value")->value();
             
-            if (param == "led_delay") {
+            if (param == "led_delay" || param == "led_start_from" || param == "led_max") {
                 // config[param] = value.toInt();
-                setConfigValueInt(param.c_str(), value.toInt());
+                int valueInt = value.toInt();
+                if (param == "led_delay" && valueInt < 0){ valueInt = 0; }
+                if (param == "led_start_from" && valueInt < 0){ valueInt = 0; }
+                if (param == "led_start_from" && valueInt > 90){ valueInt = 90; }
+                if (param == "led_max" && valueInt > 100){ valueInt = 0; }
+                if (param == "led_max" && valueInt < 10){ valueInt = 10; }
+                setConfigValueInt(param.c_str(), valueInt);
+                value = String(valueInt);
             } else if (param == "led_mode" || param == "WIFI_SSID" || param == "WIFI_PASS" || param == "NTP_SERVER1" || param == "NTP_SERVER2") {
                 setConfigValue(param.c_str(), value.c_str());
             } else if (param == "currentBrightness") {

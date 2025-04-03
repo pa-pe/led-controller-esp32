@@ -13,6 +13,8 @@ int ledStartsFrom = 25;
 void initLED() {
     pinMode(LED_PIN, OUTPUT);
     digitalWrite(LED_PIN, !LED_ON_STATE);
+    runtimeData.values["led_min"] = String(config["led_min"]);
+    runtimeData.values["led_max"] = String(config["led_max"]);
     runtimeData.values["led_delay"] = String(config["led_delay"]);
     runtimeData.values["led_mode"] = String(config["led_mode"]);
 }
@@ -30,8 +32,8 @@ void handleLED() {
       }
 
       if (onTo >= nows){
-        if (targetBrightness != 100){
-          targetBrightness = 100;
+        if (targetBrightness != config["led_max"]){
+          targetBrightness = config["led_max"];
           logEvent("LED set by PIR: " + String(targetBrightness));
         }
       } else {
